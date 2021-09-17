@@ -5,6 +5,12 @@ manim is python libary for creating math animation create by grant Sanderson fou
 ## TheMotionOfPlanets
 ![Orbitting](https://github.com/thanniti/Manim-Gallery/blob/main/Media/TheMotionOfPlanets_ManimCE_v0.10.0.gif)
 ```python
+from manim import*
+import numpy as np
+from numpy import random
+from numpy import linalg as LA
+import functools
+import operator as op
 
 class Orbiting(VGroup):
 
@@ -107,9 +113,12 @@ class TheMotionOfPlanets(Scene):
 ## InfiniteSumLine
 ![InfiniteSumLine](https://github.com/thanniti/Manim-Gallery/blob/main/Media/InfiniteSum_ManimCE_v0.10.0.gif)
 ```python
+from manim import*
+import numpy as np
+
 class InfiniteSum(Scene):
 	def construct(self):
-
+	
 		nl = NumberLine(
 			x_range=[0,65,1.25],
 			length=26,
@@ -120,10 +129,9 @@ class InfiniteSum(Scene):
 			color = BLUE,
 			).shift(2*DOWN)
 		nl.to_edge(LEFT,buff=0)
-
+		
 		LINE_COLOR = [RED_A,RED]
 		COLOR_bool = True
-
 		sum_brace = []
 		sum_line=[]
 		SUM=[]
@@ -159,6 +167,9 @@ class InfiniteSum(Scene):
 ## Many boxes
 ![Many boxes](https://github.com/thanniti/Manim-Gallery/blob/main/Media/StackRect_ManimCE_v0.10.0.png)
 ```python
+from manim import*
+import numpy as np
+
 class StackRect(Scene):
 	def construct(self):
 		sequence = MathTex(r"1",r",",r"4",r",",r"9",r",",r"16",r",",r"?")
@@ -207,6 +218,10 @@ class StackRect(Scene):
 # SphereScene
 this superclass are use to create the following sphere scene
 ```python
+from manim import*
+import numpy as np
+from numpy import random
+
 class SphereScene(ThreeDScene):
 	def get_ghost_surface(self, surface):
 		result = surface.copy()
@@ -343,6 +358,147 @@ class RotateAllPiecesWithExpansion(SphereScene):
 			for piece in sphere
 		])
 		self.wait(5)
+```
+## ThreeBodySimulation
+![ThreeBody](https://github.com/thanniti/Manim-Gallery/blob/main/Media/SimulateThreeBody_ManimCE_v0.10.0.gif)
+```
+from manim import*
+import numpy as np
+from numpy import random
+from numpy import linalg as LA
+import functools
+import operator as op
+
+class SimulateThreeBody(ThreeDScene):
+
+	masses = [1, 6, 3]
+	colors = [RED_E, GREEN_E, BLUE_E]
+	G = 1
+	play_time = 60
+
+	def construct(self):
+		self.add_axes()
+		self.add_bodies()
+		self.add_trajectories()
+		self.let_play()
+
+	def add_bodies(self):
+		masses = self.masses
+		colors = self.colors
+
+		bodies = self.bodies = VGroup()
+
+		centers = self.get_initial_position()
+
+		print(centers)
+
+		for mass, color, center in zip(masses, colors, centers):
+			body = Sphere(
+				stroke_width=0.1,
+			)
+			body.set_color(color)
+			body.set_opacity(0.75)
+			body.mass = masses
+			body.radius = 0.08 * np.sqrt(mass)
+			body.set_width(2 * body.radius)
+
+			body.point = center
+			body.move_to(center)
+
+			body.velocity = self.get_initial_velocity(
+				center, centers, mass
+			)
+
+			bodies.add(body)
+
+			#body.p = body.mass * vector(0,0,0)
+		
+		total_mass = np.sum([body.mass for body in bodies])
+		center_of_mass = functools.reduce(op.add, [
+			body.mass * body.get_center() / total_mass
+			for body in bodies
+		])
+		average_momentum = functools.reduce(op.add, [
+			body.mass * body.velocity / total_mass
+			for body in bodies
+		])
+		for body in bodies:
+			body.shift(-center_of_mass)
+			body.velocity -= average_momentum
+
+	def get_initial_position(self):
+		return [
+			np.array([random.randint(3),random.randint(3),random.randint(3)])
+			for x in range(len(self.masses))
+		]
+
+	def get_initial_velocity(self, center, centers, mass):
+		to_others = [
+			center - center2
+			for center2 in centers
+		]
+		velocity = 0.2 * mass * normalize(*filter(
+			lambda diff: LA.norm(diff) > 0,
+			to_others
+		))
+		return velocity
+
+	def add_trajectories(self):
+		def update_trajectory(traj, dt):
+			new_point = traj.body.point
+			if LA.norm(new_point - traj.get_points()[-1]) > 0.01:
+				traj.add_smooth_curve_to(new_point)
+
+		for body in self.bodies:
+			traj = VMobject()
+			traj.body = body
+			traj.start_new_path(body.point)
+			traj.set_stroke(body.color, 1, opacity=0.75)
+			traj.add_updater(update_trajectory)
+			self.add(traj, body)
+
+	def let_play(self):
+		bodies = self.bodies
+		bodies.add_updater(self.update_bodies)
+		# Break it up to see partial files as
+		# it's rendered
+		self.add(bodies)
+		self.wait(10)
+		#for x in range(int(self.play_time)):
+		#	self.wait()
+
+	def update_bodies(self, bodies, dt):
+		G = self.G
+
+		num_mid_steps = 1000
+		for x in range(num_mid_steps):
+			for body in bodies:
+				acceleration = np.zeros(3)
+				for body2 in bodies:
+					if body2 is body:
+						continue
+					diff = body2.point - body.point
+					m2 = body2.mass
+					R = LA.norm(diff)
+					acceleration = acceleration + (G * m2 * diff / (R**3))
+				body.point = body.point + (body.velocity * dt / num_mid_steps)
+				body.velocity = body.velocity + (acceleration * dt / num_mid_steps)
+		for body in bodies:
+			body.move_to(body.point)
+		return bodies
+
+
+	def add_axes(self):
+		axes = ThreeDAxes()
+		axes.set_stroke(width=0.5)
+		self.add(axes)
+
+		# Orient
+		self.set_camera_orientation(
+				phi=70 * DEGREES,
+				theta=-110 * DEGREES,
+		)
+		self.begin_ambient_camera_rotation()
 ```
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
 
