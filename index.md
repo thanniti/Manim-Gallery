@@ -221,7 +221,7 @@ class StackRect(Scene):
 
 		self.add(rectgroup_1,rectgroup_2,rectgroup_3,rectgroup_4,rectgroup_5,sequence)
 ```
-# SphereScene
+## SphereScene
 this superclass are use to create the following sphere scene
 ```python
 from manim import*
@@ -260,7 +260,7 @@ class SphereScene(ThreeDScene):
 		)
 		return sphere
 ```
-## Slicing Sphere
+**Slicing Sphere**
 ![Slice To Rings](https://github.com/thanniti/Manim-Gallery/blob/main/Media/Ring_ManimCE_v0.10.0.gif)
 ```python
 class Ring(SphereScene):
@@ -311,7 +311,7 @@ class Ring(SphereScene):
 		for i in range(0, a):
 			rings[i].set_color(colors[i])
 ```
-## Sphere Expansion
+**Sphere Expansion**
 ![RotateAllPiecesWithExpansion](https://github.com/thanniti/Manim-Gallery/blob/main/Media/RotateAllPiecesWithExpansion_ManimCE_v0.10.0.gif)
 ```python
 class RotateAllPiecesWithExpansion(SphereScene):
