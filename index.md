@@ -1,7 +1,13 @@
 # Welcome to my manim gallery
 
 manim is python libary for creating math animation create by grant Sanderson founder of 3b1b channels
+**some of the code are inherit form Grants ([see his code](https://github.com/3b1b/videos))
 
+# to render
+copy the code and run the command
+`manim filename.py classname -p/-ql`
+* *-p for height quality(1080p)* *
+* *-ql for low quality(480p)* *
 ## TheMotionOfPlanets
 ![Orbitting](https://github.com/thanniti/Manim-Gallery/blob/main/Media/TheMotionOfPlanets_ManimCE_v0.10.0.gif)
 ```python
@@ -500,7 +506,7 @@ class SimulateThreeBody(ThreeDScene):
 		)
 		self.begin_ambient_camera_rotation()
 ```
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+For more details see [Repository](https://github.com/thanniti/Manim-Gallery)
 
 ### Support or Contact
 Thanniti Leelapattanaputichot
