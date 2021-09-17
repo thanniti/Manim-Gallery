@@ -5,6 +5,7 @@ manim is python libary for creating math animation create by grant Sanderson fou
 
 # to render
 copy the code and run the command
+
 `manim filename.py classname -p/-ql`
 * *-p for height quality(1080p)* *
 * *-ql for low quality(480p)* *
