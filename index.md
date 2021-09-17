@@ -104,6 +104,58 @@ class TheMotionOfPlanets(Scene):
 		]
 		return ellipse
 ```
+## InfiniteSumLine
+![InfiniteSumLine](https://github.com/thanniti/Manim-Gallery/blob/main/Media/InfiniteSum_ManimCE_v0.10.0.gif)
+```python
+class InfiniteSum(Scene):
+	def construct(self):
+
+		nl = NumberLine(
+			x_range=[0,65,1.25],
+			length=26,
+			numbers_with_elongated_ticks=[0,5,10,15,20,25,30,35,40,45,50,55,60,65],
+			include_numbers=True,
+			numbers_to_include= [0,5,10,15,20,25,30,35,40,45,50,55,60,65],
+			decimal_number_config={"num_decimal_places": 0},
+			color = BLUE,
+			).shift(2*DOWN)
+		nl.to_edge(LEFT,buff=0)
+
+		LINE_COLOR = [RED_A,RED]
+		COLOR_bool = True
+
+		sum_brace = []
+		sum_line=[]
+		SUM=[]
+		a,b=0,3
+		for i in range(0,3,1):
+			COLOR_bool = int(not(COLOR_bool))
+			sum_brace.append(BraceBetweenPoints(nl.n2p(a),nl.n2p(b),UP))
+			sum_line.append(Line(nl.n2p(a),nl.n2p(b)).set_color(LINE_COLOR[COLOR_bool]))
+			SUM.append(VGroup(sum_brace[i],sum_line[i]))
+			a=a+3**(i+1)
+			b=b+3**(i+2)
+
+		sum_brace_group = Group(*[sum_brace[i] for i in range(3)])
+		sum_line_group= Group(*[sum_line[i] for i in range(3)])
+		
+		sum_tex = Tex("3","9","27")
+
+		sum_tex[0].next_to(sum_brace_group[0],UP)
+		sum_tex[1].next_to(sum_brace_group[1],UP)
+		sum_tex[2].next_to(sum_brace_group[2],UP)
+
+		self.play(Create(nl))
+		for i in range(0,3):
+			self.play(AnimationGroup(
+				GrowFromEdge(sum_brace_group[i], LEFT),
+				GrowFromEdge(sum_line_group[i], LEFT),
+				FadeIn(sum_tex[i]),
+				lag_ratio = 0.5,
+				run_time = 1.5,
+				)
+			)
+```
 
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
 
