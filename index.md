@@ -204,21 +204,18 @@ class StackRect(Scene):
 
 		self.add(rectgroup_1,rectgroup_2,rectgroup_3,rectgroup_4,rectgroup_5,sequence)
 ```
-## Slicing Sphere
-![Slice To Rings](https://github.com/thanniti/Manim-Gallery/blob/main/Media/Ring_ManimCE_v0.10.0.gif)
+# SphereScene
+this superclass are use to create the following sphere scene
 ```python
 class SphereScene(ThreeDScene):
-
 	def get_ghost_surface(self, surface):
 		result = surface.copy()
 		result.set_fill(BLUE_E, opacity=0)
 		result.set_stroke(WHITE, width=0.5, opacity=0.5)
 		return result
-
 	def get_ax(self):
 		ax = ThreeDAxes()
 		return ax
-
 	def get_smooth_sphere(self, color):
 		sm_sphere = ParametricSurface(
 			lambda u, v: np.array([
@@ -231,7 +228,6 @@ class SphereScene(ThreeDScene):
 		sm_sphere.set_opacity(0.8)
 		sm_sphere.set_stroke(color, opacity=0.8)
 		return sm_sphere
-
 	def get_sphere(self, color_a, color_b, a, b):
 		sphere = ParametricSurface(
 			lambda u, v: np.array([
@@ -242,7 +238,10 @@ class SphereScene(ThreeDScene):
 			checkerboard_colors=[color_a, color_b], resolution=(a, b)
 		)
 		return sphere
-
+```
+## Slicing Sphere
+![Slice To Rings](https://github.com/thanniti/Manim-Gallery/blob/main/Media/Ring_ManimCE_v0.10.0.gif)
+```python
 class Ring(SphereScene):
 
 	n_random_subsets = 12
@@ -290,6 +289,60 @@ class Ring(SphereScene):
 		colors = [BLUE_E, BLUE_D]*a
 		for i in range(0, a):
 			rings[i].set_color(colors[i])
+```
+## Sphere Expansion
+![RotateAllPiecesWithExpansion](https://github.com/thanniti/Manim-Gallery/blob/main/Media/RotateAllPiecesWithExpansion_ManimCE_v0.10.0.gif)
+```python
+class RotateAllPiecesWithExpansion(SphereScene):
+
+	with_expansion = True
+	a = 30
+	b = 30
+
+	def construct(self):
+		#self.setup_shapes()
+		self.rotate_all_pieces()
+
+	#def setup_shapes(self):
+		#self.sphere = self.get_sphere(BLUE_E, BLUE_C)
+		#self.ghost_sphere = self.get_ghost_surface(sphere)
+
+	def rotate_all_pieces(self):
+		sphere = self.get_sphere(BLUE_E, BLUE_C, self.a, self.b)
+		ghost_sphere = self.get_ghost_surface(sphere)
+		
+		ghost_sphere.scale(0.99)
+		self.bring_to_back(ghost_sphere)
+
+		self.set_camera_orientation(phi=75 * DEGREES, theta=30 * DEGREES)
+
+		random.seed(0)
+		random.shuffle(sphere.submobjects)
+
+		sphere_target = VGroup()
+		for piece in sphere:
+			p0, p1, p2, p3 = piece.get_anchors()[:4]
+			piece.set_points_as_corners([
+				p3, p0, p1, p2, p3
+			])
+			piece.generate_target()
+			sphere_target.add(piece.target)
+			piece.target.move_to(
+				(1 + random.random()) * piece.get_center()
+			)
+
+		self.add(ghost_sphere, sphere)
+		self.wait()
+		if self.with_expansion:
+			self.play(LaggedStartMap(
+				MoveToTarget, sphere
+			))
+		self.wait()
+		self.play(*[
+			Rotate(piece, 90 * DEGREES, axis=piece.get_center())
+			for piece in sphere
+		])
+		self.wait(5)
 ```
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
 
