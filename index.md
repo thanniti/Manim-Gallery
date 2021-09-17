@@ -204,6 +204,93 @@ class StackRect(Scene):
 
 		self.add(rectgroup_1,rectgroup_2,rectgroup_3,rectgroup_4,rectgroup_5,sequence)
 ```
+## Slicing Sphere
+![Slice To Rings](https://github.com/thanniti/Manim-Gallery/blob/main/Media/Ring_ManimCE_v0.10.0.gif)
+```python
+class SphereScene(ThreeDScene):
+
+	def get_ghost_surface(self, surface):
+		result = surface.copy()
+		result.set_fill(BLUE_E, opacity=0)
+		result.set_stroke(WHITE, width=0.5, opacity=0.5)
+		return result
+
+	def get_ax(self):
+		ax = ThreeDAxes()
+		return ax
+
+	def get_smooth_sphere(self, color):
+		sm_sphere = ParametricSurface(
+			lambda u, v: np.array([
+				1.5 * np.cos(u) * np.cos(v),
+				1.5 * np.cos(u) * np.sin(v),
+				1.5 * np.sin(u)
+			]), v_range=[0, TAU], u_range=[-PI / 2, PI / 2],
+			checkerboard_colors=[color, color], resolution=(150,150)
+		)
+		sm_sphere.set_opacity(0.8)
+		sm_sphere.set_stroke(color, opacity=0.8)
+		return sm_sphere
+
+	def get_sphere(self, color_a, color_b, a, b):
+		sphere = ParametricSurface(
+			lambda u, v: np.array([
+				1.5 * np.cos(u) * np.cos(v),
+				1.5 * np.cos(u) * np.sin(v),
+				1.5 * np.sin(u)
+			]), v_range=[0, TAU], u_range=[-PI / 2, PI / 2],
+			checkerboard_colors=[color_a, color_b], resolution=(a, b)
+		)
+		return sphere
+
+class Ring(SphereScene):
+
+	n_random_subsets = 12
+	a = 30
+	b = 30
+
+	def construct(self):
+		self.setup_shapes()
+		self.divide_into_rings()
+
+	def setup_shapes(self):
+		sphere = self.get_sphere(BLUE_E, BLUE_C, self.a, self.b)
+		sphere.set_stroke(WHITE, width=0.25)
+		self.add(sphere)
+		self.sphere = sphere
+
+		u_values, v_values = sphere.get_u_values_and_v_values()
+		rings = VGroup(*[VGroup() for u in u_values])
+		for piece in sphere:
+			rings[piece.u_index].add(piece.copy())
+		self.set_ring_colors(rings)
+		self.rings = rings
+
+		self.axes = self.get_ax()
+		self.add(self.axes)
+
+		#self.renderer.camera.light_source.move_to(3*IN)
+		self.set_camera_orientation(phi=75 * DEGREES, theta=30 * DEGREES)
+		self.begin_ambient_camera_rotation()
+
+	def divide_into_rings(self):
+		rings = self.rings
+
+		self.play(FadeIn(rings), FadeOut(self.sphere))
+		self.play(
+			rings.animate.space_out_submobjects(1.5),
+			rate_func=there_and_back_with_pause,
+			run_time=3
+		)
+		self.wait(2)
+		rings.save_state()
+
+	def set_ring_colors(self, rings):
+		a = len(rings)
+		colors = [BLUE_E, BLUE_D]*a
+		for i in range(0, a):
+			rings[i].set_color(colors[i])
+```
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
 
 ### Jekyll Themes
