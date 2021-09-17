@@ -156,7 +156,54 @@ class InfiniteSum(Scene):
 				)
 			)
 ```
+## Many boxes
+![Many boxes](https://github.com/thanniti/Manim-Gallery/blob/main/Media/StackRect_ManimCE_v0.10.0.png)
+```python
+class StackRect(Scene):
+	def construct(self):
+		sequence = MathTex(r"1",r",",r"4",r",",r"9",r",",r"16",r",",r"?")
+		sequence[0].shift(4*LEFT,1.5*DOWN),
+		sequence[1].shift(3*LEFT,1.5*DOWN),
+		sequence[2].shift(2*LEFT,1.5*DOWN),
+		sequence[3].shift(1*LEFT,1.5*DOWN),
+		sequence[4].shift(1.5*DOWN),
+		sequence[5].shift(1*RIGHT,1.5*DOWN),
+		sequence[6].shift(2*RIGHT,1.5*DOWN),
+		sequence[7].shift(3*RIGHT,1.5*DOWN),
+		sequence[8].shift(4*RIGHT,1.5*DOWN),
 
+		rect = Rectangle(height=0.3, width=0.3, stroke_color = WHITE, stroke_opacity= 1)
+		rect.set_fill(YELLOW, opacity=0.8)
+		rect.set_stroke(width=0)
+
+		rectgroup_1 = rect.copy().next_to(sequence[0],5*UP)
+
+		rgroup_2 = VGroup(*[rect.copy() for i in range(2)])
+		rgroup_2.arrange(RIGHT, buff = 0.1)
+		rectgroup_2 = VGroup(*[rgroup_2.copy() for i in range(2)])
+		rectgroup_2.arrange(DOWN, buff = 0.1)
+		rectgroup_2.next_to(sequence[2],5*UP)
+
+		rgroup_3 = VGroup(*[rect.copy() for i in range(3)])
+		rgroup_3.arrange(RIGHT, buff = 0.1)
+		rectgroup_3 = VGroup(*[rgroup_3.copy() for i in range(3)])
+		rectgroup_3.arrange(DOWN, buff = 0.1)
+		rectgroup_3.next_to(sequence[4],5*UP)
+
+		rgroup_4 = VGroup(*[rect.copy() for i in range(4)])
+		rgroup_4.arrange(RIGHT, buff = 0.1)
+		rectgroup_4 = VGroup(*[rgroup_4.copy() for i in range(4)])
+		rectgroup_4.arrange(DOWN, buff = 0.1)
+		rectgroup_4.next_to(sequence[6],5*UP)
+		
+		rgroup_5 = VGroup(*[rect.copy() for i in range(5)])
+		rgroup_5.arrange(RIGHT, buff = 0.1)
+		rectgroup_5 = VGroup(*[rgroup_5.copy() for i in range(5)])
+		rectgroup_5.arrange(DOWN, buff = 0.1)
+		rectgroup_5.next_to(sequence[8],5*UP)
+
+		self.add(rectgroup_1,rectgroup_2,rectgroup_3,rectgroup_4,rectgroup_5,sequence)
+```
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
 
 ### Jekyll Themes
