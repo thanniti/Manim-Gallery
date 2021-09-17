@@ -1,6 +1,7 @@
 # Welcome to my manim gallery
 
-manim is python libary for creating math animation create by grant Sanderson founder of 3b1b channels
+manim is python libary for creating math animation create by grant Sanderson founder of 3b1b channel
+
 **some of the code are inherit form Grants ([see his code](https://github.com/3b1b/videos))
 
 # to render
