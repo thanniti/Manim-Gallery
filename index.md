@@ -1,9 +1,9 @@
-## Welcome to my manim gallery
+# Welcome to my manim gallery
 
 manim is python libary for creating math animation create by grant Sanderson founder of 3b1b channels
 
-### Scene
-
+## TheMotionOfPlanets
+![Orbitting](https://github.com/thanniti/Manim-Gallery/blob/main/Media/TheMotionOfPlanets_ManimCE_v0.10.0.gif)
 ```python
 
 class Orbiting(VGroup):
