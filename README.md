@@ -4,7 +4,7 @@ manim is python libary for creating math animation create by grant Sanderson fou
 
 **some of the code are inherit form Grants ([see his code](https://github.com/3b1b/videos))
 
-# to render
+# How to render
 copy the code and run the command
 
 `manim filename.py classname -p/-ql`
