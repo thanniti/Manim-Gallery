@@ -11,8 +11,8 @@ copy the code and run the command
 * *-p for height quality(1080p)* *
 * *-ql for low quality(480p)* *
 ## TheMotionOfPlanets
-> Orbiting of small mass object around large mass object
-note that gravitational force is function of distance between two object
+> Orbiting of small mass object around large mass object, 
+note that gravitational force is a function of distance between two object
 ![Orbitting](https://github.com/thanniti/Manim-Gallery/blob/main/Media/TheMotionOfPlanets_ManimCE_v0.10.0.gif)
 ```python
 from manim import*
